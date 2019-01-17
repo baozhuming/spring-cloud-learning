@@ -7,8 +7,8 @@ eureka:
   server:
     enable-self-preservation: false
   instance:
-    prefer-ip-address: true
-#    hostname: peer1
+      hostname: localhost
+  #    prefer-ip-address: true
   client:
     #register-with-eureka: false
     #fetch-registry: false
