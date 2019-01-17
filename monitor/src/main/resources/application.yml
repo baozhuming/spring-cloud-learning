@@ -1,0 +1,27 @@
+
+server:
+  port: 8764
+spring:
+  jackson:
+    serialization:
+      indent-output: true
+  application:
+    name: hello-service
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 10
+  client:
+    service-url:
+      defaultZone: http://peer1:8761/eureka/,http://peer2:8762/eureka/,http://peer3:8763/eureka/
+logging:
+  config: classpath:log4j2.yml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: false

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="config" />
+        <module name="discovery" />
+        <module name="monitor" />
+        <module name="peer" />
+        <module name="person" />
+        <module name="ribbon-consumer" />
+        <module name="some" />
+        <module name="Spingcloud_1" />
+        <module name="spring-cloud-feign" />
+        <module name="thymeleaf" />
+        <module name="ui" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ribbon-consumer (1)" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="discovery" options="-parameters" />
+      <module name="monitor" options="-parameters" />
+      <module name="peer" options="-parameters" />
+      <module name="ribbon-consumer" options="-parameters" />
+      <module name="ribbon-consumer (1)" options="-parameters" />
+      <module name="thymeleaf" options="-parameters" />
+    </option>
+  </component>
+</project>

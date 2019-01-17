@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=chrome"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet">
+    <link th:href="@{layui2/css/layui.css}" rel="stylesheet" media="all">
+    <script th:src="@{jquery-3.3.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{layui2/layui.js}" charset="utf-8"></script>
+    <link rel="shortcut icon" th:href="@{favicon.ico}"/>
+    <link rel="bookmark" th:href="@{favicon.ico}"/>
+    <title sec:authentication="name"></title>
+    <style type="text/css">
+        body{
+            padding-top: 50px;
+        }
+        .starter-template{
+            padding: 40px 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Spring Security演示</a>
+            </div>
+            <div id="layerDemo" class="collapse navbar-collapse site-demo-button" style="margin-bottom: 0;">
+                <ul class="nav navbar-nav">
+                    <li><a th:href="@{/}">首页</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><a data-method="log" id="log">日志</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+    <div class="container">
+        <div class="starter-template">
+            <h1 th:text="${msg.title}"></h1>
+            <div sec:authorize="isAuthenticated()">
+                This content is only shown to authenticated users.
+            </div>
+            <p class="bg-primary" th:text="${msg.content}"></p>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <p class="bg-info" th:text="${msg.etraInfo}"></p>
+            </div>
+            <div sec:authorize="hasRole('ROLE_USER')">
+                <p class="bg-info">无更多信息显示</p>
+            </div>
+            <div sec:authorize-url="/admin/foo">
+                can see /admin
+            </div>
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" class="btn btn-primary" value="注销"/>
+            </form>
+        </div>
+    </div>
+<!-- 示例-970 -->
+<ins class="adsbygoogle" style="display:inline-block;width:970px;height:90px" data-ad-client="ca-pub-6111334333458862" data-ad-slot="3820120620"></ins>
+</body>
+
+<script th:inline="javascript"><!-- 访问model中的值,添加th:inline即可访问 -->
+
+</script>
+
+<script>
+    //弹出一个页面层
+    layui.use('layer', function(){ //独立版的layer无需执行这一句
+        var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+        //触发事件
+        var active = {
+            log: function () {
+                var that = this;
+                //多窗口模式，层叠置顶
+                layer.open({
+                    type: 2 //此处以iframe举例
+                    , title: '<span class="laytit">接口实时日志</span>'
+                    , area: ['80%', '70%']
+                    , shade: 0.7
+                    , maxmin: true
+                    /*, offset: [ //为了演示，随机坐标
+                        Math.random() * ($(window).height() - 300)
+                        , Math.random() * ($(window).width() - 390)
+                    ]*/
+                    , content: '/logiframe', //iframe的url
+                    cancel: function(index){
+                        closeSocket();
+                    }
+
+                    /*, zIndex: layer.zIndex //重点1
+                    , success: function (layero) {
+                        layer.setTop(layero); //重点2
+                    }*/
+                });
+            }
+        };
+        $('#layerDemo #log').on('click', function(){
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+    });
+    <!-- 日志实时推送业务处理 -->
+    var stompClient = null;
+
+    function openSocket() {
+        if (stompClient == null) {
+            if($("#log-container").find("span").length==0){
+                $("#log-container div").after("<span>通道连接成功,静默等待.....</span><img src='images/loading.gif'>");
+            }
+            var socket = new SockJS('websocket?token=kl');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({token: "kl"}, function (frame) {
+                stompClient.subscribe('/topic/pullLogger', function (event) {
+                    var content = JSON.parse(event.body);
+                    var leverhtml = '';
+                    var className = '<span class="classnametext">' + content.className + '</span>';
+                    switch (content.level) {
+                        case 'INFO':
+                            leverhtml = '<span class="infotext">' + content.level + '</span>';
+                            break;
+                        case 'DEBUG':
+                            leverhtml = '<span class="debugtext">' + content.level + '</span>';
+                            break;
+                        case 'WARN':
+                            leverhtml = '<span class="warntext">' + content.level + '</span>';
+                            break;
+                        case 'ERROR':
+                            leverhtml = '<span class="errortext">' + content.level + '</span>';
+                            break;
+                    }
+                    $("#log-container div").append("<p class='logp'>" + content.timestamp + " " + leverhtml + " --- [" + content.threadName + "] " + className + " ：" + content.body + "</p>");
+                    if (content.exception != "") {
+                        $("#log-container div").append("<p class='logp'>" + content.exception + "</p>");
+                    }
+                    if (content.cause != "") {
+                        $("#log-container div").append("<p class='logp'>" + content.cause + "</p>");
+                    }
+                    $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+                }, {
+                    token: "kltoen"
+                });
+            });
+        }
+    }
+    function closeSocket() {
+        if (stompClient != null) {
+            stompClient.disconnect();
+            stompClient = null;
+        }
+    }
+</script>
+</html>

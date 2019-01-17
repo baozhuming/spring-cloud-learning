@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=chrome"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet">
+    <link rel="shortcut icon" th:href="@{favicon.ico}"/>
+    <link rel="bookmark" th:href="@{favicon.ico}"/>
+    <title>出现异常</title>
+</head>
+<style>
+
+
+</style>
+<body>
+<div class="panel panel-primary">
+    <div class="panel-heading text-center">
+        <h3 class="panel-title">错误信息</h3>
+    </div>
+    <div class="panel-body text-center">
+        <div th:object="${errorInfo}">
+            <h3 th:text="*{'发生时间：'+time}"></h3>
+            <h3 th:text="*{'访问IP：'+ipAdrress}"></h3>
+            <h3 th:text="*{'访问地址：'+url}"></h3>
+            <h3 th:text="*{'问题类型：'+error}"></h3>
+            <h3 th:text="*{'通信状态：'+statusCode+','+reasonPhrase}"></h3>
+            <h3 th:text="*{'堆栈信息：'+stackTrace}"></h3>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

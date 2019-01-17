@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=chrome"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet">
+    <link rel="shortcut icon" th:href="@{favicon.ico}"/>
+    <link rel="bookmark" th:href="@{favicon.ico}"/>
+    <title>Title</title>
+</head>
+<body>
+<script th:src="@{jquery-3.3.1.min.js}" type="text/javascript"></script>
+<script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{js/websocket/sockjs.min.js}"></script>
+<script th:src="@{js/websocket/stomp.min.js}"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">聊天室</h3>
+    </div>
+    <div class="panel-body">
+        <form id="wiselyForm">
+            <textarea rows="4" cols="60" name="text"></textarea>
+            <input type="submit"/>
+        </form>
+    </div>
+    <div id="output"></div>
+</div>
+</body>
+
+<script th:inline="javascript"><!-- 访问model中的值,添加th:inline即可访问 -->
+$("#wiselyForm").submit(function (e) {
+    e.preventDefault();
+    var text = $("#wiselyForm").find("textarea[name='text']").val();
+    sendSpittle(text);
+});
+
+var sock = new SockJS("/endpointChat");//连接endpoint名称为/endpointChat的endpoint
+var stomp = Stomp.over(sock);
+stomp.connect("guest","guest",function (frame) {
+   stomp.subscribe("/user/queue/notifications",handleNotification);//订阅/user/queue/notifications发送的消息，这里与在控制器的messagingTemplate.convertAndSendToUser中定义的订阅地址保持一致，这里多了一个/user，并且这个/user是必须的，使用了/user才会发送消息到z
+});
+function handleNotification(message) {
+    $("#output").append("<b>Received: "+message.body+"</b><br/>");
+}
+function sendSpittle(text) {
+    stomp.send("/chat",{},text);//3
+}
+
+$("#stop").click(function (){
+    sock.close();
+});
+</script>
+</html>
