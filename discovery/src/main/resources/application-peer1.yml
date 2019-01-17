@@ -7,10 +7,10 @@ eureka:
   server:
     enable-self-preservation: false
   instance:
-      hostname: peer1
+      hostname: localhost
   #    prefer-ip-address: true
   client:
     #register-with-eureka: false
     #fetch-registry: false
     service-url:
-      defaultZone: http://peer2:8762/eureka/,http://peer3:8763/eureka/
+      defaultZone: http://localhost:8762/eureka/,http://localhost:8763/eureka/
