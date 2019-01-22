@@ -1,9 +1,8 @@
 zuul:
   routes:
-    api-a:
-      path: /baidu/
+    baid3:
 #      serviceId: hello-service
-      url: http://baidu.com
+      url: http://www.baidu.com/
 #    api-b:
 #      path: /api-b/**
 #      serviceId: feign-consumer
