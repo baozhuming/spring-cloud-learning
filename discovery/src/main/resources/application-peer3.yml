@@ -10,7 +10,7 @@ eureka:
     hostname: peer3
 #    prefer-ip-address: true
   client:
-    #register-with-eureka: false
-    #fetch-registry: false
+    register-with-eureka: false
+    fetch-registry: false
     service-url:
       defaultZone:  http://peer1:8761/eureka/,http://peer2:8762/eureka/
