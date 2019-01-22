@@ -1,7 +1,7 @@
 zuul:
   routes:
     api-a:
-      path: /baidu
+      path: /baidu/
 #      serviceId: hello-service
       url: http://baidu.com
 #    api-b:
