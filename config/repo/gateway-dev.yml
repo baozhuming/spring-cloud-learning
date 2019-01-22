@@ -8,3 +8,7 @@ zuul:
 #      path: /api-b/**
 #      serviceId: feign-consumer
 #      sensitiveHeaders:
+  host:
+    connect-timeout-millis: 30000
+    socket-timeout-millis: 60000
+  ignored-services: '*'
