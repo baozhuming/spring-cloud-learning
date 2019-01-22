@@ -1,9 +1,10 @@
 zuul:
   routes:
     api-a:
-      path: /api-a/**
-      serviceId: hello-service
-    api-b:
-      path: /api-b/**
-      serviceId: feign-consumer
-      sensitiveHeaders:
+      path: /baidu
+#      serviceId: hello-service
+      url: http://baidu.com
+#    api-b:
+#      path: /api-b/**
+#      serviceId: feign-consumer
+#      sensitiveHeaders:
