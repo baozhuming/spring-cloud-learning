@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: api-gateway
+
+server:
+  port: 9001
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+#            #当转发请求的命令执行时间超过该配置值之后，会返回JSON错误信息给外部调用方,单位毫秒
+            timeoutInMilliseconds: 6000
+ribbon:
+#  #该值小于timeoutInMilliseconds时，如果创建连接超时后，会进入重试机制，否则直接报连接超时的错误
+  ConnectTimeout: 3000
+#  #连接之后的处理超时时间，如果处理超时后，会进入重试机制，否则直接报处理超时的错误
+  ReadTimeout: 3000
+zuul:
+  SendErrorFilter:
+    post:
+      disable: true
+  routes:
+    api-a:
+      #Ant风格的路径表达式，/api-a/?表示占一个字符位,如/api-a/a,/api-a/b等,/api-a/*表示下面只有一级目录，如/api-a/aaa,/api-a/**表示下级有多级目录
+#      path: /api-a/**
+#      url: http://192.168.58.1:8763/
+#结合了spring-cloud-starter-eureka依赖后，可以直接用serviceId接入
+      path: /api-a/**
+      serviceId: hello-service
+      #局部关闭重试机制
+#      retryable: false
+    api-b:
+      path: /api-b/**
+      serviceId: feign-consumer
+      sensitiveHeaders:
+    git-config:
+      path: /config/**
+      serviceId: config-server
+    #假设有使用了security等鉴权的框架,需要session等敏感信息,需要给他们传递这些信息，配置如下sensitiveHeaders为空表示什么敏感头信息都不会过滤
+#    security:
+#      path: /security/**
+#      serviceId:  security-service
+#      sensitiveHeaders:
+  #有时候在注册中心假设有
+#  ignored-services: '*'
+  #全局关闭重试机制
+#  retryable: false
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://119.23.246.189:8761/eureka/,http://119.23.246.189:8762/eureka/,http://119.23.246.189:8763/eureka/
+      #如果添加以下设置，就识别不到serviceId
+#    fetch-registry: false
+#    register-with-eureka: false
+logging:
+  config: classpath:log4j2.yml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: false

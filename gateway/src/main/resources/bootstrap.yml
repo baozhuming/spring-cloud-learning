@@ -1,0 +1,64 @@
+server:
+  port: 9002
+spring:
+  rabbitmq:
+    host: 119.23.246.189
+    port: 5672
+    username: baozm
+    password: a05140212+
+  jackson:
+    serialization:
+      indent-output: true
+  application:
+    #必须与配置文件的前缀一致
+    name: gateway
+  cloud:
+    bus:
+      trace:
+        enabled: true
+      enabled: true
+    config:
+      profile: dev
+      label: master
+      discovery:
+        enabled: true
+        service-id: config-server
+      fail-fast: true
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      cors:
+        allowed-origins: '*'
+        allowed-methods: '*'
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://119.23.246.189:8761/eureka/,http://119.23.246.189:8762/eureka/,http://119.23.246.189:8763/eureka/
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            #当转发请求的命令执行时间超过该配置值之后，会返回JSON错误信息给外部调用方,单位毫秒
+            timeoutInMilliseconds: 60000
+ribbon:
+  #该值小于timeoutInMilliseconds时，如果创建连接超时后，会进入重试机制，否则直接报连接超时的错误
+  ConnectTimeout: 60000
+  #连接之后的处理超时时间，如果处理超时后，会进入重试机制，否则直接报处理超时的错误
+  ReadTimeout: 60000
+zuul:
+  SendErrorFilter:
+    post:
+      disable: true
+logging:
+  config: classpath:log4j2.yml

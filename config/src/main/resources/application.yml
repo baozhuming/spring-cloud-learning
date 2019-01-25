@@ -2,13 +2,40 @@
 server:
   port: 7001
 spring:
+  rabbitmq:
+    host: 119.23.246.189
+    port: 5672
+    username: baozm
+    password: a05140212+
+  jackson:
+    serialization:
+      indent-output: true
   application:
     name: config-server
   cloud:
+    bus:
+      trace:
+        enabled: true
+      enabled: true
     config:
       server:
         git:
-          uri: https://github.com/baozhuming/spring-cloud-learning/
-          search-paths: config/repo
+          uri: https://github.com/baozhuming/spring-cloud-learning.git
+          search-paths: /config/repo
           username: baozhuming
           password: a05140212+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://119.23.246.189:8761/eureka/,http://119.23.246.189:8762/eureka/,http://119.23.246.189:8763/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"

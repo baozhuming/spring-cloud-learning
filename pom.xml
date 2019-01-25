@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>config</module>
+        <module>config-client</module>
         <module>discovery</module>
         <module>ui</module>
         <module>person</module>
@@ -18,6 +19,8 @@
         <module>peer</module>
         <module>ribbon-consumer</module>
         <module>spring-cloud-feign</module>
+        <module>api-gateway</module>
+        <module>gateway</module>
     </modules>
     <parent>
         <groupId>org.springframework.cloud</groupId>

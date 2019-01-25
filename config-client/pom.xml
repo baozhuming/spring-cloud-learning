@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.springcloud</groupId>
-    <artifactId>config</artifactId>
+    <artifactId>config-client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -15,22 +15,42 @@
     </parent>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-config-server</artifactId>
-            <version>2.0.2.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>2.0.2.RELEASE</version>
+            <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
+        <!-- 在启动的时候能自动重试连接配置文件 -->
+       <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+            <version>1.2.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- 当前项目主要功能是为了手工post请求http://localhost:7002/actuator/refresh时能够实时刷新配置文件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- 结合rabbitMq消息队列，做到自动实时刷新配置信息 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-amqp</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -42,6 +62,7 @@
             <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
             <version>2.0.2.RELEASE</version>
         </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -54,5 +75,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     
 </project>

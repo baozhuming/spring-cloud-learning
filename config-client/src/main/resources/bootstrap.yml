@@ -1,0 +1,43 @@
+server:
+  port: 7002
+spring:
+  rabbitmq:
+    host: 119.23.246.189
+    port: 5672
+    username: baozm
+    password: a05140212+
+  jackson:
+    serialization:
+      indent-output: true
+  application:
+    #必须与配置文件的前缀一致
+    name: didispace
+  cloud:
+    bus:
+      trace:
+        enabled: true
+      enabled: true
+    config:
+      profile: dev
+      label: master
+      discovery:
+        enabled: true
+        service-id: config-server
+      fail-fast: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      cors:
+        allowed-origins: '*'
+        allowed-methods: '*'
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://119.23.246.189:8761/eureka/,http://119.23.246.189:8762/eureka/,http://119.23.246.189:8763/eureka/
