@@ -12,6 +12,6 @@ eureka:
     instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
   client:
     service-url:
-      defaultZone: http://10.1.4.107:8761/eureka/,http://10.1.4.107:8763/eureka/
+      defaultZone: http://peer1:8761/eureka/,http://peer3:8763/eureka/
     register-with-eureka: false
     fetch-registry: false
